@@ -21,10 +21,6 @@ class RecyclerAdapter(private val messages: MutableList<String>):
         holder.bindMessage(message)
     }
 
-    fun foo() {
-        Log.d("messages: ", messages.joinToString { ", " })
-    }
-
     class TextHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
         companion object {
             private val TEXT_KEY = "TEXT"
