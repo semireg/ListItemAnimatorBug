@@ -1,0 +1,13 @@
+.DS_Store
+.idea/uiDesigner.xml
+target
+build
+.gradle
+local.properties
+/.idea/workspace.xml
+/.idea/dictionaries/*
+/.idea/tasks.xml
+/.idea/libraries/*
+*.iml
+~
+captures
