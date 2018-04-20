@@ -14,22 +14,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab_add.setOnClickListener { _ ->
-//            Snackbar.make(view, "Adding", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-
             main_fragment().insertNewMessages()
         }
 
         fab_remove.setOnClickListener { _ ->
-//            Snackbar.make(view, "Removing", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-
             main_fragment().popOldMessages()
         }
 
         fab_animate.setOnClickListener { _ ->
-//            Snackbar.make(view, "Animate", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
+            main_fragment().forceChangeItems()
         }
     }
 
