@@ -15,9 +15,11 @@ import kotlinx.android.synthetic.main.fragment_main.*
  */
 class MainActivityFragment : Fragment() {
 
+    private val groupCount = 3
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: RecyclerAdapter
     private lateinit var messages: MutableList<String>
+    private var counter = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,7 +30,7 @@ class MainActivityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        messages = mutableListOf("Test 1", "Test 2", "Test 3")
+        messages = mutableListOf()
 
         linearLayoutManager = LinearLayoutManager(context)
         recycler_view.layoutManager = linearLayoutManager
@@ -36,26 +38,32 @@ class MainActivityFragment : Fragment() {
         adapter = RecyclerAdapter(messages = messages)
         recycler_view.adapter = adapter
 
+
+
         setRecyclerViewItemTouchListener()
     }
 
-    fun insertMessages(newMessages: List<String>) {
+    fun updateList() {
+
+    }
+
+    fun insertNewMessages() {
+        insertNewMessages(groupCount)
+    }
+
+    private fun insertNewMessages(count: Int) {
+        val newMessages = (counter until (counter + count)).map { "Test $it" }
+        counter += count
+
         messages.addAll(0, newMessages)
-        adapter.notifyItemRangeInserted(0, newMessages.count())
+        adapter.notifyItemRangeInserted(0, count)
     }
 
-    fun insertMessage(message: String, position: Int) {
-        messages.add(position, message)
-        adapter.notifyItemInserted(position)
+    fun popOldMessages() {
+        popOldMessages(groupCount)
     }
 
-    fun popMessage() {
-        val index = messages.count() - 1
-        messages.removeAt(index)
-        adapter.notifyItemRemoved(index)
-    }
-
-    fun popMessages(removeCount: Int) {
+    private fun popOldMessages(removeCount: Int) {
         if (removeCount > messages.count()) return
 
         (0 until removeCount).forEach { messages.removeAt(messages.count() - 1) }

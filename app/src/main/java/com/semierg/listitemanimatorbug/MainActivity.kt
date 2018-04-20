@@ -17,14 +17,14 @@ class MainActivity : AppCompatActivity() {
 //            Snackbar.make(view, "Adding", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 
-            main_fragment().insertMessages(listOf("Test 1", "Test 2", "Test 3"))
+            main_fragment().insertNewMessages()
         }
 
         fab_remove.setOnClickListener { _ ->
 //            Snackbar.make(view, "Removing", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 
-            main_fragment().popMessages(3)
+            main_fragment().popOldMessages()
         }
 
         fab_animate.setOnClickListener { _ ->
