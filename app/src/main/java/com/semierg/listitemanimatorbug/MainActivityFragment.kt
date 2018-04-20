@@ -4,10 +4,14 @@ import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.semierg.listitemanimatorbug.animation.AnimationPayload
+import com.semierg.listitemanimatorbug.animation.Animations
+import com.semierg.listitemanimatorbug.animation.StandardItemAnimator
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -38,13 +42,18 @@ class MainActivityFragment : Fragment() {
         adapter = RecyclerAdapter(messages = messages)
         recycler_view.adapter = adapter
 
+        recycler_view.itemAnimator = StandardItemAnimator()
 
-
-        setRecyclerViewItemTouchListener()
+//        setRecyclerViewItemTouchListener()
     }
 
-    fun updateList() {
-
+    fun forceChangeItems() {
+//        val payloads = (0 until messages.count()).map {  }
+        adapter.notifyItemRangeChanged(
+                0,
+                messages.count(),
+                AnimationPayload.create(Animations.DEFAULT_THROB)
+        )
     }
 
     fun insertNewMessages() {
@@ -70,21 +79,22 @@ class MainActivityFragment : Fragment() {
         adapter.notifyItemRangeRemoved(messages.count(), removeCount)
     }
 
-    private fun setRecyclerViewItemTouchListener() {
-
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                val position = viewHolder.adapterPosition
-                messages.removeAt(position)
-                recycler_view.adapter.notifyItemRemoved(position)
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recycler_view)
-    }
+    // For fun
+//    private fun setRecyclerViewItemTouchListener() {
+//
+//        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+//            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
+//                return false
+//            }
+//
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+//                val position = viewHolder.adapterPosition
+//                messages.removeAt(position)
+//                recycler_view.adapter.notifyItemRemoved(position)
+//            }
+//        }
+//
+//        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+//        itemTouchHelper.attachToRecyclerView(recycler_view)
+//    }
 }
