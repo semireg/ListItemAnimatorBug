@@ -5,6 +5,7 @@ build
 .gradle
 local.properties
 /.idea/workspace.xml
+/.idea/caches/*
 /.idea/dictionaries/*
 /.idea/tasks.xml
 /.idea/libraries/*
