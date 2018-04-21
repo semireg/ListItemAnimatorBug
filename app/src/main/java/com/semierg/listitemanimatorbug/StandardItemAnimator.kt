@@ -20,6 +20,8 @@ class StandardItemAnimator : DraggableItemAnimator() {
         val LOG: Logger = LoggerFactory.getLogger("Animator")
     }
 
+    private var counter = 0
+
     private class AnimHolderInfo(val animationDefs: List<AnimationDefinition>) : RecyclerView.ItemAnimator.ItemHolderInfo()
 
     private val animationSetMap: MutableMap<RecyclerView.ViewHolder, MutableList<AnimationHandle>> = WeakHashMap()
@@ -40,38 +42,38 @@ class StandardItemAnimator : DraggableItemAnimator() {
         return super.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads)
     }
 
-//    override fun isRunning(): Boolean {
-//        val count = animationSetMap.values.flatMap { it }.count()
-//        return super.isRunning() || (count > 0)
-//    }
+    override fun isRunning(): Boolean {
 
-    override fun animateChange(oldHolder: RecyclerView.ViewHolder, newHolder: RecyclerView.ViewHolder, preInfo: RecyclerView.ItemAnimator.ItemHolderInfo,
-                               postInfo: RecyclerView.ItemAnimator.ItemHolderInfo): Boolean {
-        cancelCurrentAnimationIfExists(newHolder)
+        val count = animationSetMap.values.flatMap { it }.count()
+        return super.isRunning() || (count > 0)
+    }
+
+    override fun animateChange(oldHolder: RecyclerView.ViewHolder, newHolder: RecyclerView.ViewHolder,
+                               preInfo: RecyclerView.ItemAnimator.ItemHolderInfo, postInfo: RecyclerView.ItemAnimator.ItemHolderInfo): Boolean {
+
+        counter++
+        val didCancel = cancelCurrentAnimationIfExists(newHolder)
 
         LOG.trace("animateChange {}, preInfo {}", newHolder, preInfo)
-        if (preInfo is AnimHolderInfo) {
-            animate(newHolder, preInfo.animationDefs)
-            return false
+        if (oldHolder == newHolder && preInfo is AnimHolderInfo) {
+            animate(oldHolder, preInfo.animationDefs)
+            return !didCancel
         } else {
             return super.animateChange(oldHolder, newHolder, preInfo, postInfo)
         }
     }
 
     override fun endAnimation(item: RecyclerView.ViewHolder) {
-        super.endAnimation(item)
-
         cancelCurrentAnimationIfExists(item)
+        super.endAnimation(item)
     }
 
     override fun endAnimations() {
         super.endAnimations()
 
-        animationSetMap.values
-                .forEach {
-                    it.forEach(AnimationHandle::cancel)
-                }
-
+        animationSetMap.values.forEach {
+            it.forEach(AnimationHandle::cancel)
+        }
         animationSetMap.clear()
     }
 
@@ -84,27 +86,27 @@ class StandardItemAnimator : DraggableItemAnimator() {
             animationSetMap.put(holder, animationHandleList)
         }
 
-        animationDefs
-                .mapNotNullTo(animationHandleList) {
-                    it.startAnimation(holder.itemView,
-                            onAnimationEnd = { handle ->
-                                outerAnimationEnd(holder, handle)
-                            })
-                }
+        animationDefs.forEach { oneDefinition ->
+            val handle = oneDefinition.startAnimation(holder.itemView,
+                    onAnimationEnd = { handle ->
+                        outerAnimationEnd(holder, handle)
+                    }) ?: return@forEach
+
+            animationHandleList.add(handle)
+        }
     }
 
     private fun outerAnimationEnd(holder: RecyclerView.ViewHolder, animationHandle: AnimationHandle) {
         val list = animationSetMap[holder] ?: return
         list.remove(animationHandle)
-        if (list.isEmpty()) {
-            dispatchChangeFinished(holder, false)
-//            dispatchAnimationFinished(holder) // Original
-        }
+        dispatchChangeFinished(holder, false)
+        counter--
     }
 
-    private fun cancelCurrentAnimationIfExists(holder: RecyclerView.ViewHolder) {
-        val list = animationSetMap[holder] ?: return
+    private fun cancelCurrentAnimationIfExists(holder: RecyclerView.ViewHolder): Boolean {
+        val list = animationSetMap[holder] ?: return false
+        if(list.isEmpty()) return false
         list.forEach { it.cancel() }
-        list.clear()
+        return true
     }
 }
