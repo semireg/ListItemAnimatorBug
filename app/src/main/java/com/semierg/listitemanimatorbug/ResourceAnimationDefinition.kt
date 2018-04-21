@@ -5,7 +5,6 @@
 package com.semireg.scout.ui.adapter.animation
 
 import android.support.annotation.AnimRes
-import android.support.v4.view.ViewCompat
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -38,8 +37,10 @@ class ResourceAnimationDefinition constructor(override val name: String, @AnimRe
             }
         })
 
-        ViewCompat.animate(view).start()
-//        view.startAnimation(animation)
+
+        view.startAnimation(animation)
+//        ViewCompat.animate(view).start()
+
         return handle
     }
 
@@ -47,8 +48,8 @@ class ResourceAnimationDefinition constructor(override val name: String, @AnimRe
         private val viewRef = WeakReference<View>(view)
 
         override fun cancel() {
-            ViewCompat.animate(viewRef.get()!!).cancel()
-//            viewRef.get()?.clearAnimation()
+//            ViewCompat.animate(viewRef.get()!!).cancel()
+            viewRef.get()!!.clearAnimation()
         }
     }
 }

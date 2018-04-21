@@ -40,6 +40,11 @@ class StandardItemAnimator : DraggableItemAnimator() {
         return super.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads)
     }
 
+//    override fun isRunning(): Boolean {
+//        val count = animationSetMap.values.flatMap { it }.count()
+//        return super.isRunning() || (count > 0)
+//    }
+
     override fun animateChange(oldHolder: RecyclerView.ViewHolder, newHolder: RecyclerView.ViewHolder, preInfo: RecyclerView.ItemAnimator.ItemHolderInfo,
                                postInfo: RecyclerView.ItemAnimator.ItemHolderInfo): Boolean {
         cancelCurrentAnimationIfExists(newHolder)
