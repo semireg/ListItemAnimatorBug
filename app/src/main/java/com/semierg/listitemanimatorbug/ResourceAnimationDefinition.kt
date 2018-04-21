@@ -2,14 +2,12 @@
  * Copyright (c) 2017 Semireg Industries, LLC.  All rights reserved.
  */
 
-package com.semireg.scout.ui.adapter.animation
+package com.semierg.listitemanimatorbug.animation
 
 import android.support.annotation.AnimRes
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import com.semierg.listitemanimatorbug.animation.AnimationDefinition
-import com.semierg.listitemanimatorbug.animation.AnimationHandle
 import java.lang.ref.WeakReference
 
 /** Animations created from predefined resources */
@@ -37,10 +35,7 @@ class ResourceAnimationDefinition constructor(override val name: String, @AnimRe
             }
         })
 
-
         view.startAnimation(animation)
-//        ViewCompat.animate(view).start()
-
         return handle
     }
 
@@ -48,8 +43,7 @@ class ResourceAnimationDefinition constructor(override val name: String, @AnimRe
         private val viewRef = WeakReference<View>(view)
 
         override fun cancel() {
-//            ViewCompat.animate(viewRef.get()!!).cancel()
-            viewRef.get()!!.clearAnimation()
+            viewRef.get()?.clearAnimation()
         }
     }
 }

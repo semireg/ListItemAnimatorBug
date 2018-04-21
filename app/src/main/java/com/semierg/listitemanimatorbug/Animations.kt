@@ -5,7 +5,6 @@
 package com.semierg.listitemanimatorbug.animation
 
 import com.semierg.listitemanimatorbug.R
-import com.semireg.scout.ui.adapter.animation.ResourceAnimationDefinition
 
 /**
  * Default animation definitions.<br>
